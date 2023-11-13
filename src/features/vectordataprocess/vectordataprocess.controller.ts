@@ -37,4 +37,20 @@ export class VectordataprocessController {
     );
     return container.id;
   }
+
+  // 新增資料
+  @Post('createData') // http://localhost:3000/vectordataprocess/createData
+  // 從前端接收資料，這邊會從Body取得
+  async createData(
+    @Body('databaseName') databaseName: string,
+    @Body('containerName') containerName: string,
+    @Body('data') data: any,
+  ) {
+    const result = await this.vectordataprocessService.createData(
+      databaseName,
+      containerName,
+      data,
+    );
+    return result;
+  }
 }

@@ -42,11 +42,15 @@ export class CosmosService {
   }
 
   // 要建立項目調用此方法
-  async createItem(containerId: string, item: any): Promise<any> {
+  async createItem(
+    databaseId: string,
+    containerId: string,
+    item: any,
+  ): Promise<any> {
     const { resource } = await this.client
-      .database('YourDatabaseId')
+      .database(databaseId)
       .container(containerId)
-      .items.create(item);
+      .items.upsert(item);
     return resource;
   }
 

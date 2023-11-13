@@ -19,4 +19,16 @@ export class VectordataprocessService {
     );
     return container;
   }
+
+  // 設計容器的吞吐量
+
+  // 新增資料
+  async createData(databaseId: string, containerId: string, data: any) {
+    const result = await this.cosmosService.createItem(
+      databaseId,
+      containerId,
+      data,
+    );
+    return result;
+  }
 }

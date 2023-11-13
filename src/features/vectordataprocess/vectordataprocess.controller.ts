@@ -22,7 +22,11 @@ export class VectordataprocessController {
 
   // 新建容器
   @Post('createContainer') // http://localhost:3000/vectordataprocess/createContainer
-  // 從前端接收容器名稱，這邊會從Query取得
+  // 從前端接收容器名稱，這邊會從Body取得
+  //   {
+  //     "databaseName":"test",
+  //     "containerName":"item"
+  //   }
   async createContainer(
     @Body('databaseName') databaseName: string,
     @Body('containerName') containerName: string,

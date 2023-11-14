@@ -1,5 +1,12 @@
-import { Controller, Post, Body } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  UseInterceptors,
+  UploadedFile,
+} from '@nestjs/common';
 import { VectordataprocessService } from './vectordataprocess.service';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { ExcelService } from 'src/utils/excel.service';
 
 @Controller('vectordataprocess')
@@ -56,39 +63,47 @@ export class VectordataprocessController {
 
   // 一次性更新所有資料
   // 先刪除容器，再建立容器，再新增資料
+  @UseInterceptors(FileInterceptor('fieldname'))
   @Post('updateAllData') // http://localhost:3000/vectordataprocess/updateAllData
   // 從前端接收資料，這邊會從Body取得
   async updateAllData(
     @Body('databaseName') databaseName: string,
     @Body('containerName') containerName: string,
     @Body('data') data: any,
+    @UploadedFile() file: Express.Multer.File,
   ) {
-    // 刪除容器
-    const deleteContainer = await this.vectordataprocessService.deleteContainer(
-      databaseName,
-      containerName,
-    );
-    console.log(deleteContainer);
+    const { newQAArr, newCalssArr, newQArr } =
+      await this.excelService.uploadQAExcel(file);
+    console.log(newQAArr);
+    console.log(newCalssArr);
+    console.log(newQArr);
+    console.log(databaseName);
+    console.log(containerName);
+    console.log(data);
 
-    // 檢查刪除操作是否成功
-    if (deleteContainer.error) {
-      // 如果刪除失敗，返回錯誤訊息
-      return { error: 'Failed to delete container.' };
-    }
-
-    // 建立容器
-    const createContainer = await this.vectordataprocessService.createContainer(
-      databaseName,
-      containerName,
-    );
-    console.log(createContainer);
-
-    // 寫入資料
-    const result = await this.vectordataprocessService.createData(
-      databaseName,
-      containerName,
-      data,
-    );
-    return result;
+    // // 刪除容器
+    // const deleteContainer = await this.vectordataprocessService.deleteContainer(
+    //   databaseName,
+    //   containerName,
+    // );
+    // console.log(deleteContainer);
+    // // 檢查刪除操作是否成功
+    // if (deleteContainer.error) {
+    //   // 如果刪除失敗，返回錯誤訊息
+    //   return { error: 'Failed to delete container.' };
+    // }
+    // // 建立容器
+    // const createContainer = await this.vectordataprocessService.createContainer(
+    //   databaseName,
+    //   containerName,
+    // );
+    // console.log(createContainer);
+    // // 寫入資料
+    // const result = await this.vectordataprocessService.createData(
+    //   databaseName,
+    //   containerName,
+    //   data,
+    // );
+    // return result;
   }
 }

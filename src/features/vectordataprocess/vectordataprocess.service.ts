@@ -20,6 +20,15 @@ export class VectordataprocessService {
     return container;
   }
 
+  // 刪除容器
+  async deleteContainer(databaseId: string, containerId: string) {
+    const container = await this.cosmosService.deleteContainer(
+      databaseId,
+      containerId,
+    );
+    return container;
+  }
+
   // 設計容器的吞吐量
 
   // 新增資料

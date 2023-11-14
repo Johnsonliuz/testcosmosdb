@@ -41,6 +41,16 @@ export class CosmosService {
     return container;
   }
 
+  // 要刪除容器調用此方法
+  async deleteContainer(databaseId: string, containerId: string): Promise<any> {
+    const { resource } = await this.client
+      .database(databaseId)
+      .container(containerId)
+      .delete();
+    console.log(`容器 '${containerId}' 已被删除。`);
+    return resource;
+  }
+
   // 要建立項目調用此方法
   async createItem(
     databaseId: string,

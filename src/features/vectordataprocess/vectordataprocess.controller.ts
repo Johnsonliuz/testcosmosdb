@@ -53,4 +53,42 @@ export class VectordataprocessController {
     );
     return result;
   }
+
+  // 一次性更新所有資料
+  // 先刪除容器，再建立容器，再新增資料
+  @Post('updateAllData') // http://localhost:3000/vectordataprocess/updateAllData
+  // 從前端接收資料，這邊會從Body取得
+  async updateAllData(
+    @Body('databaseName') databaseName: string,
+    @Body('containerName') containerName: string,
+    @Body('data') data: any,
+  ) {
+    // 刪除容器
+    const deleteContainer = await this.vectordataprocessService.deleteContainer(
+      databaseName,
+      containerName,
+    );
+    console.log(deleteContainer);
+
+    // 檢查刪除操作是否成功
+    if (deleteContainer.error) {
+      // 如果刪除失敗，返回錯誤訊息
+      return { error: 'Failed to delete container.' };
+    }
+
+    // 建立容器
+    const createContainer = await this.vectordataprocessService.createContainer(
+      databaseName,
+      containerName,
+    );
+    console.log(createContainer);
+
+    // 寫入資料
+    const result = await this.vectordataprocessService.createData(
+      databaseName,
+      containerName,
+      data,
+    );
+    return result;
+  }
 }
